@@ -26,3 +26,6 @@
        (sort-by -)
        (take 3)
        (apply +)))
+
+(println "part one:" (part-one))
+(println "part two:" (part-two))
