@@ -52,17 +52,18 @@
     {:start (parse-stacks (take (dec stacks) input))
      :moves (parse-moves (drop (inc stacks) input))}))
 
-(defn part-one []
+(defn crate-mover
+  [flip?]
   (let [{:keys [start moves]} (parse-instructions)
         state (atom start)]
     (doseq [{:keys [:move :from :to]} moves]
       (let [from-row (nth @state (dec from))
             to-row (nth @state (dec to))
             [moving remaining] (split-at move from-row)
-            ;; crates are moved one at a time but I can't be bothered so I just flip the moving
-            ;; list :')
-            flip-moving (reverse moving)
-            added (concat flip-moving to-row)]
+            ;; in part 1 crates are moved one at a time but I can't be bothered so I just flip the
+            ;; moving list :')
+            actual-moving (if flip? (reverse moving) moving)
+            added (concat actual-moving to-row)]
         ;; remove items from the from-row
         ;; = swap the from-row with the remaining items
         (swap! state assoc (dec from) remaining)
@@ -72,4 +73,11 @@
     ;; we only want the top crates
     (map first @state)))
 
-(part-one)
+(defn part-one []
+  (crate-mover true))
+
+(defn part-two []
+  (crate-mover false))
+
+(println "part one:" (part-one))
+(println "part two:" (part-two))
